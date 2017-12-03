@@ -17,7 +17,9 @@ var Score = 0;
 var ScoreUp = 10;
 var ScoreDown = -1;
 
-//generate random images each picture
+/**
+ * generate random pictures each board item
+ */
 function Generate(){
     var b = [];
     for(var i = 0 ; i < BoardSize ; i++){
@@ -52,10 +54,25 @@ function Generate(){
     console.log(board);
 }
 
+/**
+ * @param {*} i 
+ * @param {*} j 
+ * get board item url by it's index
+ */
 function IndexToId(i,j){
     return ("#board-item-" + i) + j;
 }
 
+/**
+ * @param {*} i 
+ * @param {*} j 
+ * @param {*} url 
+ * change board item background image
+ */
+function ChangeBackground(i,j,url){
+    $(IndexToId(i,j)).css('background',"url('" + url + "')");
+    $(IndexToId(i,j)).css('background-size','cover');
+}
 //button clicking function
 function Click(i,j){
     if(i < 0 || j < 0 || i > 3 || j > 3){
@@ -65,28 +82,33 @@ function Click(i,j){
     TwoClick++;
     if(TwoClick == 1){
         var item = IndexToId(i,j);
-        $(item).css('background',"url('"+board[i][j]+"')");
-        $(item).css('background-size','cover');
+        ChangeBackground(i,j,board[i][j]);
         LastIndex.x = i;
         LastIndex.y = j;
     }else{
-        var item = IndexToId(i,j);
-        $(item).css('background',"url('"+board[i][j]+"')");
-        $(item).css('background-size','cover');
+        ChangeBackground(i,j,board[i][j]);
         TwoClick = 0;
-
         setTimeout(function(){
             if(board[LastIndex.x][LastIndex.y] == board[i][j]){
-                alert('ok');
+                UpdateScore(true);
             }else{
-                $(IndexToId(i,j)).css('background',"url('" + hiddenImage + "')");
-                $(IndexToId(i,j)).css('background-size','cover');
-                $(IndexToId(LastIndex.x,LastIndex.y)).css('background',"url('" + hiddenImage + "')");
-                $(IndexToId(LastIndex.x,LastIndex.y)).css('background-size','cover');
+                UpdateScore(false);
+                ChangeBackground(i,j,hiddenImage);
+                ChangeBackground(LastIndex.x,LastIndex.y,hiddenImage);
             }
             LastIndex = {};
-        },3000);
+        },200);
     }
+}
+
+
+/**
+ * @param {*} isCorrect 
+ * update score
+ */
+function UpdateScore(isCorrect){
+    Score = Score + ((isCorrect) ? ScoreUp : ScoreDown);
+    $('#score').text(Score);
 }
 
 $(document).ready(function(){
