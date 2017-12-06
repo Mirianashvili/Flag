@@ -1,1 +1,1 @@
-.board{width:400px}.board-item{float:left;width:96px;height:96px;margin-left:2px;background:#ebebee;margin-bottom:1px;background:url("../images/question.png") no-repeat;background-size:cover;border:1px solid #eee}.board-item:hover{cursor:pointer}
+nav{background:#3F51B5}.board{margin:30px auto;width:400px}.card-content{height:500px}.board-item{float:left;width:96px;height:96px;margin-left:2px;background:#ebebee;margin-bottom:1px;background:url("../images/question.png") no-repeat;background-size:cover;border:1px solid #eee}.board-item:hover{cursor:pointer}
