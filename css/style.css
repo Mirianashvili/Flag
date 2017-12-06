@@ -3,7 +3,7 @@ nav {
 }
 
 .board {
-  margin: 30px auto;
+  margin: 0px auto;
   width: 400px;
 }
 
@@ -20,7 +20,7 @@ nav {
   margin-bottom: 1px;
   background: url("../images/question.png") no-repeat;
   background-size: cover;
-  border: 1px solid #eee;
+  border: 2px solid #607d8b;
 }
 
 .board-item:hover {

@@ -106,6 +106,9 @@ function Click(i,j){
             LastIndex = {};
         },ClosedTime);
     }
+    if(IsWin()){
+        Materialize.toast('You win a game :) Score ' + Score, 4000);
+    }
 }
 
 function UpdateScore(isCorrect){
@@ -113,6 +116,44 @@ function UpdateScore(isCorrect){
     $('#score').text('Your Score ' + Score);
 }
 
-$(document).ready(function(){
+function Init(){
+    for(var i = 0 ; i < BoardSize ; i++){
+        for(var j = 0 ; j < BoardSize ; j++){
+            ChangeBackground(i,j,hiddenImage);
+        }
+    }
     Generate();
+    Score = 0;
+    $("#score").html('Score:0');
+}
+
+function IsWin(){
+    for(var i = 0 ; i < BoardSize ; i++){
+        for(var j = 0 ; j < BoardSize ; j++){
+            if($(IndexToId(i,j)).css('background').indexOf(hiddenImage) != -1){
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+
+$(document).ready(function(){
+    Init();
+
+    $('#show').click(function(){
+        for(var i = 0 ; i < BoardSize ; i++){
+            for(var j = 0 ; j < BoardSize;j++){
+                ChangeBackground(i,j,board[i][j]);
+            }
+        }
+        setTimeout(function(){
+            Init();
+        },2000);
+    });
+
+    $('#newgame').click(function(){
+        Init(); 
+    })
 });
