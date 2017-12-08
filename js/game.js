@@ -22,12 +22,27 @@ var Score = 0;
 var ScoreUp = 10;
 var ScoreDown = -1;
 
-function getRandomBoardIndex(){
-    return Math.floor(Math.random() * BoardSize);
+/**
+ * Initialize game
+ */
+function Init(){
+    for(var i = 0 ; i < BoardSize ; i++){
+        for(var j = 0 ; j < BoardSize ; j++){
+            ChangeBackground(i,j,hiddenImage);
+        }
+    }
+    Generate();
+    Score = 0;
+    $("#score").html('Score:0');
 }
 
+/**
+ * Generates random images each item
+ */
 function Generate(){
     var b = [];
+    var x,y,counter = 0;
+    
     for(var i = 0 ; i < BoardSize ; i++){
         b[i] = [];
         board[i] = [];
@@ -39,7 +54,6 @@ function Generate(){
         }
     }
 
-    var x,y,counter = 0;
     for(var i = 0 ; i < images.length ; i++){
         x = getRandomBoardIndex();
         y = getRandomBoardIndex();
@@ -62,10 +76,20 @@ function Generate(){
     console.log(board);
 }
 
+function getRandomBoardIndex(){
+    return Math.floor(Math.random() * BoardSize);
+}
+
+/**
+ * Getting Id by cordinates
+ */
 function IndexToId(i,j){
     return ("#board-item-" + i) + j;
 }
 
+/**
+ * Change background Image
+ */
 function ChangeBackground(i,j,url){
     $(IndexToId(i,j)).css('background',"url('" + url + "')");
     $(IndexToId(i,j)).css('background-size','cover');
@@ -94,10 +118,18 @@ function Click(i,j){
         ChangeBackground(i,j,board[i][j]);
         TwoClick = 0;
         setTimeout(function(){
+            if(LastIndex.x == i && LastIndex.y == j){
+                TwoClick--;
+                Materialize.toast('You can\'t select it', 4000);
+                return;
+            }
             if(board[LastIndex.x][LastIndex.y] == board[i][j]){
                 UpdateScore(true);
                 discovered[i][j] = true;
                 discovered[LastIndex.x][LastIndex.y] = true;
+                if(IsWin()){
+                    Materialize.toast('You win a game :) Score ' + Score, 4000);
+                }
             }else{
                 UpdateScore(false);
                 ChangeBackground(i,j,hiddenImage);
@@ -106,27 +138,19 @@ function Click(i,j){
             LastIndex = {};
         },ClosedTime);
     }
-    if(IsWin()){
-        Materialize.toast('You win a game :) Score ' + Score, 4000);
-    }
 }
 
+/**
+ * Update Score Label
+ */
 function UpdateScore(isCorrect){
     Score = Score + ((isCorrect) ? ScoreUp : ScoreDown);
     $('#score').text('Your Score ' + Score);
 }
 
-function Init(){
-    for(var i = 0 ; i < BoardSize ; i++){
-        for(var j = 0 ; j < BoardSize ; j++){
-            ChangeBackground(i,j,hiddenImage);
-        }
-    }
-    Generate();
-    Score = 0;
-    $("#score").html('Score:0');
-}
-
+/**
+ * Check every button click. if a user win game? 
+ */
 function IsWin(){
     for(var i = 0 ; i < BoardSize ; i++){
         for(var j = 0 ; j < BoardSize ; j++){
@@ -135,25 +159,5 @@ function IsWin(){
             }
         }
     }
-    return true;
+    return true && Score != 0;
 }
-
-
-$(document).ready(function(){
-    Init();
-
-    $('#show').click(function(){
-        for(var i = 0 ; i < BoardSize ; i++){
-            for(var j = 0 ; j < BoardSize;j++){
-                ChangeBackground(i,j,board[i][j]);
-            }
-        }
-        setTimeout(function(){
-            Init();
-        },2000);
-    });
-
-    $('#newgame').click(function(){
-        Init(); 
-    })
-});
